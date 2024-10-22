@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +18,8 @@ import com.example.auth_service.entities.users.User;
 import com.example.auth_service.entities.users.dtos.AuthenticationDTO;
 import com.example.auth_service.entities.users.dtos.LoginResponseDTO;
 import com.example.auth_service.entities.users.dtos.RegisterDTO;
-import com.example.auth_service.repositories.UserRepository;
 import com.example.auth_service.services.TokenService;
+import com.example.auth_service.services.UserService;
 
 import jakarta.validation.Valid;
 
@@ -31,7 +30,7 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
     private TokenService tokenService;
 
@@ -51,17 +50,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(error);
         }
 
-        if (
-            (this.userRepository.findByEmail(data.email()) != null) ||
-            (this.userRepository.findByName(data.name()) != null)
-        ) return ResponseEntity.badRequest().body("Username or email already used");
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User user = new User(data.name(), data.email(), encryptedPassword, data.role());
-
-        this.userRepository.save(user);
-
-        return ResponseEntity.ok().build();
+        return userService.addUser(data);
     }
 
     /**
