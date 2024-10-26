@@ -15,6 +15,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RabbitMQService rabbitMQService;
     
     @SuppressWarnings("rawtypes")
     public ResponseEntity addUser(RegisterDTO data){
@@ -27,6 +29,9 @@ public class UserService {
         User user = new User(data.name(), data.email(), encryptedPassword, data.role());
 
         this.userRepository.save(user);
+        
+        String userId = this.userRepository.findByName(data.name()).get().getId();
+        rabbitMQService.sendMessage(userId);
 
         return ResponseEntity.ok().build();
     }

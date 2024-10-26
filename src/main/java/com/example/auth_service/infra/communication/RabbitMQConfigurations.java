@@ -9,17 +9,21 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfigurations {
 
-    private final String QUEUE = "items-queue";
+    @Value("${spring.rabbitmq.queue.user}")
+    private String QUEUE;
 
-    private final String EXCHANGE = "otp-exchange";
+    @Value("${spring.rabbitmq.exchange.app}")
+    private String EXCHANGE;
 
-    private final String ROUTING_KEY = "items";
+    @Value("${spring.rabbitmq.routing.key.user}")
+    private String ROUTING_KEY;
 
     @Bean
     Queue queue() {
