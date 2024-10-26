@@ -20,7 +20,7 @@ public class UserService {
     public ResponseEntity addUser(RegisterDTO data){
         if (
             (this.userRepository.findByEmail(data.email()) != null) ||
-            (this.userRepository.findByName(data.name()) != null)
+            (this.userRepository.findByName(data.name()).isPresent())
         ) return ResponseEntity.badRequest().body("Username or email already used");
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
