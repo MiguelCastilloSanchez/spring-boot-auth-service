@@ -3,9 +3,8 @@ package com.example.auth_service.infra.communication;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
-
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -40,17 +39,17 @@ public class RabbitMQConfigurations {
     }
 
     @Bean
-    TopicExchange exchange() {
-        return new TopicExchange(EXCHANGE);
+    DirectExchange exchange() {
+        return new DirectExchange(EXCHANGE);
     }
 
     @Bean
-    Binding bindingUserQueue(Queue userQueue, TopicExchange exchange) {
+    Binding bindingUserQueue(Queue userQueue, DirectExchange exchange) {
         return BindingBuilder.bind(userQueue).to(exchange).with(ROUTING_KEY);
     }
 
     @Bean
-    public Binding bindingAuthQueue(Queue authQueue, TopicExchange exchange) {
+    public Binding bindingAuthQueue(Queue authQueue, DirectExchange exchange) {
         return BindingBuilder.bind(authQueue).to(exchange).with(ROUTING_KEY);
     }
 

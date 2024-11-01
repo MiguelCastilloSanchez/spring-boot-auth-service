@@ -1,4 +1,4 @@
-package com.example.auth_service.services;
+package com.example.auth_service.services.rabbitmq;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.AmqpTemplate;
