@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RabbitMQService {
+public class RabbitSenderService {
+
     private final AmqpTemplate amqpTemplate;
 
     @Value("${spring.rabbitmq.exchange.app}")
@@ -20,4 +21,5 @@ public class RabbitMQService {
     public void sendMessage(String userId) {
         amqpTemplate.convertAndSend(EXCHANGE, ROUTING_KEY, userId);
     }
+
 }
