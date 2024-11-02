@@ -49,11 +49,6 @@ public class RabbitMQConfigurations {
     }
 
     @Bean
-    public Binding bindingAuthQueue(Queue authQueue, DirectExchange exchange) {
-        return BindingBuilder.bind(authQueue).to(exchange).with(ROUTING_KEY);
-    }
-
-    @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
