@@ -24,6 +24,7 @@ public class UserService {
     
     @SuppressWarnings("rawtypes")
     public ResponseEntity addUser(RegisterDTO data){
+
         if (
             (this.userRepository.findByEmail(data.email()) != null) ||
             (this.userRepository.findByName(data.name()).isPresent())
@@ -37,7 +38,9 @@ public class UserService {
         String userId = this.userRepository.findByName(data.name()).get().getId();
         rabbitSenderService.sendMessage(userId);
 
+        
         return ResponseEntity.ok().build();
+
     }
 
     @SuppressWarnings("rawtypes")
