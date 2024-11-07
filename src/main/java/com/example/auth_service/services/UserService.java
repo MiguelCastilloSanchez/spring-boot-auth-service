@@ -63,10 +63,10 @@ public class UserService {
     }
 
     private void sendRegisterMessage(String userId, String name){
-        RabbitRegisterDTO message = new RabbitRegisterDTO();
-        message.setUserId(userId);
-        message.setName(name);
+
+        RabbitRegisterDTO message = new RabbitRegisterDTO(userId, name);
 
         rabbitSenderService.sendMessage(message);
+        
     }
 }
