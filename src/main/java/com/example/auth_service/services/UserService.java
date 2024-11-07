@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.auth_service.entities.users.User;
+import com.example.auth_service.entities.users.dtos.RabbitRegisterDTO;
 import com.example.auth_service.entities.users.dtos.RegisterDTO;
 import com.example.auth_service.repositories.UserRepository;
 import com.example.auth_service.services.rabbitmq.RabbitSenderService;
@@ -35,10 +36,11 @@ public class UserService {
 
         this.userRepository.save(user);
         
-        String userId = this.userRepository.findByName(data.name()).get().getId();
-        rabbitSenderService.sendMessage(userId);
+        String name = data.name();
+        String userId = this.userRepository.findByName(name).get().getId();
 
-        
+        this.sendRegisterMessage(userId, name);
+
         return ResponseEntity.ok().build();
 
     }
@@ -60,5 +62,11 @@ public class UserService {
         }
     }
 
-    
+    private void sendRegisterMessage(String userId, String name){
+        RabbitRegisterDTO message = new RabbitRegisterDTO();
+        message.setUserId(userId);
+        message.setName(name);
+
+        rabbitSenderService.sendMessage(message);
+    }
 }

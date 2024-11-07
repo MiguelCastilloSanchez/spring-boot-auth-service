@@ -5,6 +5,8 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.auth_service.entities.users.dtos.RabbitRegisterDTO;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +20,8 @@ public class RabbitSenderService {
     @Value("${spring.rabbitmq.routing.key.user}")
     private String ROUTING_KEY;
 
-    public void sendMessage(String userId) {
-        amqpTemplate.convertAndSend(EXCHANGE, ROUTING_KEY, userId);
+    public void sendMessage(RabbitRegisterDTO message) {
+        amqpTemplate.convertAndSend(EXCHANGE, ROUTING_KEY, message);
     }
 
 }
