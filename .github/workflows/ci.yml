@@ -45,8 +45,7 @@ jobs:
         echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
     - name: Update version in pom.xml (optional)
-      run: |
-        mvn versions:set -DnewVersion=${{ env.NEW_VERSION }}-auth-service
+      run: mvn versions:set -DnewVersion=${{ env.NEW_VERSION }}-auth-service
 
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
