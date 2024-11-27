@@ -17,32 +17,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     
-    - name: Set up Git
-      run: |
-          git config user.name ${{ secrets.USERNAME }}
-          git config user.email ${{ secrets.EMAIL }}
-
-    - name: Get the latest tag
-      id: get-latest-tag
-      run: |
-          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0")
-          echo "Latest tag: $latest_tag"
-          echo "tag=$latest_tag" >> $GITHUB_ENV
-
-    - name: Calculate new tag
-      id: calculate-new-tag
-      run: |
-          current_tag=${tag/v/}
-          IFS='.' read -ra parts <<< "$current_tag"
-          parts[2]=$((parts[2] + 1))
-          new_tag="v${parts[0]}.${parts[1]}.${parts[2]}"
-          echo "New tag: $new_tag"
-          echo "new_tag=$new_tag" >> $GITHUB_ENV
-
-    - name: Create new tag
-      run: |
-          git tag ${{ env.new_tag }}
-          git push origin ${{ env.new_tag }}
+    - name: Tag Repo
+      uses: richardsimko/update-tag@v1
+      with:
+        tag_name: v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
     - name: Set up JDK 21
       uses: actions/setup-java@v4
@@ -67,4 +47,4 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         push: true
-        tags: miguelacs/personal:${{ env.new_tag }}-auth-service
+        tags: miguelacs/personal:1.0-auth-service
