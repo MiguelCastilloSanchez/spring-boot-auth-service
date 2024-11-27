@@ -28,7 +28,7 @@ jobs:
         distribution: 'oracle'
         cache: maven
 
-      - name: Update version in pom.xml (optional)
+    - name: Update version in pom.xml (optional)
       run: mvn versions:set -DnewVersion=${{ env.NEW_VERSION }}-auth-service
 
     - name: Build with Maven
