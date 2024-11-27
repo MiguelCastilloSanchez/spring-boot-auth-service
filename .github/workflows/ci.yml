@@ -1,3 +1,5 @@
+# CI Pipeline
+
 name: Java CI with Maven
 
 on:
