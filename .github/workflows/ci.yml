@@ -28,7 +28,23 @@ jobs:
         java-version: '21'
         distribution: 'oracle'
         cache: maven
-        
+
+    - name: Get current version from git tag
+      id: get_version
+      run: |
+        LAST_TAG=$(git describe --tags --abbrev=0)
+        VERSION_NUMBER=$(echo $LAST_TAG | sed -E 's/([0-9]+\.[0-9]+\.[0-9]+)-auth-service/\1/')
+        VERSION_PARTS=(${VERSION_NUMBER//./ })
+        PATCH=${VERSION_PARTS[2]}
+        NEW_PATCH=$((PATCH + 1))
+        NEW_VERSION="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$NEW_PATCH"
+        echo "NEW_VERSION=$NEW_VERSION"
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+    - name: Update version in pom.xml (optional)
+      run: |
+        mvn versions:set -DnewVersion=${{ env.NEW_VERSION }}-auth-service
+
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
 
@@ -42,4 +58,4 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         push: true
-        tags: miguelacs/personal:1.0-auth-service
+        tags: miguelacs/personal:${{ env.NEW_VERSION }}-auth-service
