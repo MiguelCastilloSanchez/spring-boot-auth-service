@@ -53,6 +53,7 @@ jobs:
 
     - name: Update image tag in values.yaml
       run: |
+        cd helm-chart-auth-service
         new_tag="${{ steps.autotagger.outputs.new-tag }}-auth-service"
         sed -i "s/tag: .*/tag: \"${new_tag}\"/" values.yaml
 
@@ -65,6 +66,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
+        cd helm-chart-auth-service
         git add values.yaml
         git commit -m "Update image tag to ${{ steps.autotagger.outputs.new-tag }}-auth-service #patch"
         git push https://<user>:${{ secrets.GH_TOKEN }}@github.com/<user>/<target-repo>.git
