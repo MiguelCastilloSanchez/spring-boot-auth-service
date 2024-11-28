@@ -1,4 +1,4 @@
-# CI Pipeline
+# CI Pipeline AUTH-SERVICE
 
 name: Java CI with Maven
 
@@ -20,7 +20,7 @@ jobs:
     - name: Tag Repo
       uses: richardsimko/update-tag@v1
       with:
-        tag_name: v1.0.0
+        tag_name: 1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
