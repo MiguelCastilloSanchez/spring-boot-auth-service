@@ -1,5 +1,7 @@
-# CI Pipeline For Updating Tag, Build with Maven, Build the Image 
-# and Pushes the Image to Dockerhub
+# CI/CD Pipepilne
+# Builds the project and makes the image
+# Updates the tag depending on the commit (major, minor or patch)
+# Updates the deployment repository (Helm Chart) with the new image tag
 
 name: Java CI with Maven
 
