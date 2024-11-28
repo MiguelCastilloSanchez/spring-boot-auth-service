@@ -69,4 +69,4 @@ jobs:
         cd helm-chart-auth-service
         git add values.yaml
         git commit -m "Update image tag to ${{ steps.autotagger.outputs.new-tag }}-auth-service #patch"
-        git push https://<user>:${{ secrets.GH_TOKEN }}@github.com/<user>/<target-repo>.git
+        git push https://MiguelCastilloSanchez:${{ secrets.GH_TOKEN }}@github.com/MiguelCastilloSanchez/helm-chart-auth-service.git
