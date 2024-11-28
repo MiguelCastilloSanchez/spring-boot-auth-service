@@ -1,4 +1,5 @@
-# CI Pipeline AUTH-SERVICE
+# CI Pipeline For Updating Tag, Build with Maven, Build the Image 
+# and Pushes the Image to Dockerhub
 
 name: Java CI with Maven
 
