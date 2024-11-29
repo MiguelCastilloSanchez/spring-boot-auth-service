@@ -50,12 +50,12 @@ jobs:
 
     - name: Checkout deployment repository
       run: |
-        git clone https://MiguelCastilloSanchez:${{ secrets.GH_TOKEN }}@github.com/MiguelCastilloSanchez/helm-chart-auth-service.git
-        cd helm-chart-auth-service
+        git clone https://MiguelCastilloSanchez:${{ secrets.GH_TOKEN }}@github.com/MiguelCastilloSanchez/helm-chart-app-services.git
+        cd helm-chart-app-services
 
     - name: Update image tag in values.yaml
       run: |
-        cd helm-chart-auth-service
+        cd helm-chart-app-services
         new_tag="${{ steps.autotagger.outputs.new-tag }}-auth-service"
         sed -i "s/tag: .*/tag: \"${new_tag}\"/" values-auth-service.yaml
 
@@ -68,7 +68,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
-        cd helm-chart-auth-service
-        git add values.yaml
+        cd helm-chart-app-services
+        git add values-auth-service.yaml
         git commit -m "Update image tag to ${{ steps.autotagger.outputs.new-tag }}-auth-service #patch"
-        git push https://MiguelCastilloSanchez:${{ secrets.GH_TOKEN }}@github.com/MiguelCastilloSanchez/helm-chart-auth-service.git
+        git push https://MiguelCastilloSanchez:${{ secrets.GH_TOKEN }}@github.com/MiguelCastilloSanchez/helm-chart-app-services.git
