@@ -57,7 +57,7 @@ jobs:
       run: |
         cd helm-chart-auth-service
         new_tag="${{ steps.autotagger.outputs.new-tag }}-auth-service"
-        sed -i "s/tag: .*/tag: \"${new_tag}\"/" values.yaml
+        sed -i "s/tag: .*/tag: \"${new_tag}\"/" values-auth-service.yaml
 
     - name: Configure Git
       run: |
