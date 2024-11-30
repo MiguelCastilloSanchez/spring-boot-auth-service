@@ -41,7 +41,7 @@ public class UserService {
 
         this.sendRegisterMessage(userId, name);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("User created with ID: " + userId);
 
     }
 
