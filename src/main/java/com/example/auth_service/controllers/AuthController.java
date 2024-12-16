@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.auth_service.entities.users.User;
 import com.example.auth_service.entities.users.dtos.AuthenticationDTO;
 import com.example.auth_service.entities.users.dtos.LoginResponseDTO;
 import com.example.auth_service.entities.users.dtos.RegisterDTO;
+import com.example.auth_service.entities.users.dtos.VerifyDTO;
+import com.example.auth_service.services.AuthenticationService;
 import com.example.auth_service.services.TokenService;
 import com.example.auth_service.services.UserService;
 
@@ -27,6 +30,8 @@ import jakarta.validation.Valid;
 @RequestMapping(value = "/auth", produces = {"application/json"})
 public class AuthController {
 
+    @Autowired
+    private AuthenticationService authenticationService;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -50,7 +55,19 @@ public class AuthController {
             return ResponseEntity.badRequest().body(error);
         }
 
-        return userService.createUser(data);
+        return authenticationService.signup(data);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @PostMapping("/verify")
+    public ResponseEntity verifyUser(@RequestBody VerifyDTO data) {
+        return authenticationService.verifyUser(data);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @PostMapping("/resend")
+    public ResponseEntity resendVerificationCode(@RequestParam String email) {
+        return authenticationService.resendVerificationCode(email);
     }
 
     /**
@@ -87,7 +104,7 @@ public class AuthController {
 
         tokenService.revokeToken(token);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

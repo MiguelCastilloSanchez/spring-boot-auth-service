@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +31,7 @@ public class User implements UserDetails {
     private UserRole role;
 
     private String verificationCode;
-    private LocalDateTime verificationCodeExpiresAt;
+    private Instant verificationCodeExpiresAt;
     private boolean enabled;
 
     public User(String name, String email, String password) {
