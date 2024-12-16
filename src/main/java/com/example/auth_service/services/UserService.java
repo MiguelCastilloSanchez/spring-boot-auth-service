@@ -9,10 +9,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.auth_service.entities.users.User;
+import com.example.auth_service.entities.users.UserRole;
 import com.example.auth_service.entities.users.dtos.RabbitRegisterDTO;
 import com.example.auth_service.entities.users.dtos.RegisterDTO;
 import com.example.auth_service.repositories.UserRepository;
 import com.example.auth_service.services.rabbitmq.RabbitSenderService;
+
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class UserService {
@@ -22,17 +25,27 @@ public class UserService {
 
     @Autowired
     private RabbitSenderService rabbitSenderService;
+
+    @Value("${admin.code}")
+    private String adminCode;
     
     @SuppressWarnings("rawtypes")
-    public ResponseEntity addUser(RegisterDTO data){
+    public ResponseEntity createUser(RegisterDTO data){
 
         if (
             (this.userRepository.findByEmail(data.email()) != null) ||
             (this.userRepository.findByName(data.name()).isPresent())
-        ) return ResponseEntity.badRequest().body("Username or email already used");
+        ) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or email already used");
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User user = new User(data.name(), data.email(), encryptedPassword, data.role());
+
+        User user = new User(data.name(), data.email(), encryptedPassword);
+
+        if(data.code() != null && data.code().equals(adminCode)){
+            user.setRole(UserRole.ADMIN);
+        }else{
+            user.setRole(UserRole.USER);
+        }
 
         this.userRepository.save(user);
         
@@ -41,7 +54,7 @@ public class UserService {
 
         this.sendRegisterMessage(userId, name);
 
-        return ResponseEntity.ok().body("User created with ID: " + userId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 

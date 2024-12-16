@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,11 +30,14 @@ public class User implements UserDetails {
     private String password;
     private UserRole role;
 
-    public User(String name, String email, String password, UserRole role) {
+    private String verificationCode;
+    private LocalDateTime verificationCodeExpiresAt;
+    private boolean enabled;
+
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     @Override
@@ -68,7 +72,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override

@@ -50,7 +50,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(error);
         }
 
-        return userService.addUser(data);
+        return userService.createUser(data);
     }
 
     /**
@@ -75,10 +75,10 @@ public class AuthController {
     }
 
     /**
-     * Logsout the user.
+     * Logs out the user by invalidating the provided token.
      *
-     * @param authorizationHeader String containing user token
-     * @return ResponseEntity indicating success of logout
+     * @param authorizationHeader the authorization header containing the user's token
+     * @return ResponseEntity indicating the success of the logout operation
      */
     @SuppressWarnings("rawtypes")
     @PostMapping(value = "/logout")
