@@ -33,6 +33,9 @@ public class AuthenticationService implements UserDetailsService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private UserService userService;
+
     @Value("${admin.code}")
     private String adminCode;
 
@@ -82,6 +85,9 @@ public class AuthenticationService implements UserDetailsService {
                 user.setVerificationCode(null);
                 user.setVerificationCodeExpiresAt(null);
                 userRepository.save(user);
+
+                userService.sendRegisterMessage(user.getName());
+
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong validation code");
             }
@@ -117,17 +123,35 @@ public class AuthenticationService implements UserDetailsService {
         String subject = "Account Verification";
         String verificationCode = "VERIFICATION CODE " + user.getVerificationCode();
         String htmlMessage = "<html>"
-                + "<body style=\"font-family: Arial, sans-serif;\">"
-                + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
-                + "<h2 style=\"color: #333;\">Welcome to Music Reviews Site!</h2>"
-                + "<p style=\"font-size: 16px;\">Please enter the verification code below to continue:</p>"
-                + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
-                + "<h3 style=\"color: #333;\">Verification Code:</h3>"
-                + "<p style=\"font-size: 18px; font-weight: bold; color: #BB86FC;\">" + verificationCode + "</p>"
-                + "</div>"
-                + "</div>"
-                + "</body>"
-                + "</html>";
+        + "<body style=\"font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9f9;\">"
+        + "<div style=\"max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);\">"
+        
+        + "<div style=\"background-color: #BB86FC; color: #ffffff; padding: 15px 20px; border-radius: 8px 8px 0 0; text-align: center;\">"
+        + "<h1 style=\"margin: 0; font-size: 24px;\">Welcome to Music Reviews Site!</h1>"
+        + "</div>"
+        
+        + "<div style=\"padding: 20px;\">"
+        + "<p style=\"font-size: 16px; color: #333333;\">Hello,</p>"
+        + "<p style=\"font-size: 16px; color: #333333;\">Thank you for registering with <strong>Music Reviews Site</strong>. "
+        + "Please use the verification code below to complete your registration:</p>"
+        
+        + "<div style=\"background-color: #f4f4f4; text-align: center; padding: 15px; margin: 20px 0; border: 1px dashed #BB86FC; border-radius: 5px;\">"
+        + "<p style=\"font-size: 22px; font-weight: bold; color: #333333; letter-spacing: 3px; margin: 0;\">"
+        + verificationCode
+        + "</p>"
+        + "</div>"
+        
+        + "<p style=\"font-size: 14px; color: #666666;\">If you did not request this verification code, please ignore this email. "
+        + "For your security, do not share this code with anyone.</p>"
+        + "</div>"
+        
+        + "<div style=\"background-color: #f5f5f5; color: #999999; padding: 10px 20px; border-radius: 0 0 8px 8px; text-align: center; font-size: 12px;\">"
+        + "<p style=\"margin: 0;\">&copy; 2024 Music Reviews Site. All rights reserved.</p>"
+        + "</div>"
+        
+        + "</div>"
+        + "</body>"
+        + "</html>";
 
         try {
             emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
@@ -143,7 +167,7 @@ public class AuthenticationService implements UserDetailsService {
     }
 
     private Instant generateExpirationDate() {
-        return LocalDateTime.now().plusMinutes(1).toInstant(ZoneOffset.of("-06:00"));
+        return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.of("-06:00"));
     }
 }
 

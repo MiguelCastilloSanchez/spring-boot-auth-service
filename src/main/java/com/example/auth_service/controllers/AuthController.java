@@ -22,7 +22,6 @@ import com.example.auth_service.entities.users.dtos.RegisterDTO;
 import com.example.auth_service.entities.users.dtos.VerifyDTO;
 import com.example.auth_service.services.AuthenticationService;
 import com.example.auth_service.services.TokenService;
-import com.example.auth_service.services.UserService;
 
 import jakarta.validation.Valid;
 
@@ -32,10 +31,10 @@ public class AuthController {
 
     @Autowired
     private AuthenticationService authenticationService;
+
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserService userService;
+
     @Autowired
     private TokenService tokenService;
 
@@ -83,11 +82,12 @@ public class AuthController {
         
         try {
             var auth = this.authenticationManager.authenticate(credentials);
-            var token = tokenService.generateToken((User) auth.getPrincipal());
+            User user = (User) auth.getPrincipal();
+            var token = tokenService.generateToken(user);
             
             return ResponseEntity.ok(new LoginResponseDTO(token));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unverified or incorrect credentials");
         }
     }
 
